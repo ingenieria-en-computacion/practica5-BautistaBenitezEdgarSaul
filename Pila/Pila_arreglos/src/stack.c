@@ -1,23 +1,15 @@
 #include "stack.h"
 #include <stdio.h>
-#include <stdlib.h>
 
 /**
  * Crea una nueva pila vacía y la devuelve.
  * 
- * @param len valor que indica cuantos elementos se pueden guardar en la pila
  * @return Una nueva pila vacía. Si la creación falla, el estado de la cola es inválido.
- * @details Esta función inicializa una pila vacía. 
- *          Asigna memoria dinámica a data mediante malloc con un número de elementos igual a len
+ * @details Esta función inicializa una pila vacía.
  */
-Stack stack_create(int len){
+Stack stack_create(){
     Stack s;
-    s.data = (Data*)malloc(len * sizeof(Data)); // Asigna memoria dinámica
-    if (s.data == NULL) {
-        s.top = -1; // Estado inválido si falla malloc
-    } else {
-        s.top = -1; // Inicializa la pila vacía
-    }
+    s.top = -1; // Inicializa la pila vacía
     return s;
 }
 
@@ -30,7 +22,7 @@ Stack stack_create(int len){
  *          la función no realiza ninguna operación.
  */
 void stack_push(Stack* s, Data d){
-    if (s->data != NULL) { // Verifica que la pila sea válida
+    if (s->top < TAM - 1) { // Verifica que la pila no esté llena
         s->data[++(s->top)] = d;
     }
 }
@@ -60,8 +52,8 @@ Data stack_pop(Stack* s){
  *          como `stack_pop` en una pila vacía.
  */
 int stack_is_empty(Stack* s){
-    if (s == NULL || s->data == NULL) return -1; // Verifica si la pila es inválida
-    return (s->top == -1) ? 1 : 0;
+    if (s == NULL) return -1; // Verifica si el puntero es NULL
+    return (s->top == -1);
 }
 
 /**
@@ -71,23 +63,7 @@ int stack_is_empty(Stack* s){
  * @details Esta función hace que top sea igual a -1
  */
 void stack_empty(Stack* s){
-    if (s != NULL && s->data != NULL) {
-        s->top = -1; // Reinicia la pila
-    }
-}
-
-/**
- * Elimina data y libera la memoria asociada.
- * 
- * @param s Referencia a la pila que se desea liberar la memoria de data
- * @details Esta función libera la memoria asignada dinámicamente para data dentro de la pila
- */
-void stack_delete(Stack *s){
-    if (s != NULL && s->data != NULL) {
-        free(s->data); // Libera la memoria asignada dinámicamente
-        s->data = NULL;
-        s->top = -1;
-    }
+    s->top = -1;
 }
 
 /**
@@ -100,12 +76,13 @@ void stack_delete(Stack *s){
  *          la salida estándar (stdout).
  */
 void stack_print(Stack *s){
-    if (s == NULL || s->data == NULL || s->top == -1) {
+    if (s == NULL || s->top == -1) {
         printf("La pila está vacía o es inválida.\n");
         return;
     }
-    printf("Elementos de la pila: \n");
+    printf("Elementos de la pila: ");
     for (int i = s->top; i >= 0; i--) {
-        printf("%d\n", s->data[i]);
+        printf("%d ", s->data[i]);
     }
+    printf("\n");
 }
