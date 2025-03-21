@@ -1,4 +1,5 @@
 #include "stack.h"
+#include <stdio.h>
 
 /**
  * Crea una nueva pila vacía y la devuelve.
@@ -7,7 +8,9 @@
  * @details Esta función inicializa una pila vacía.
  */
 Stack stack_create(){
-
+    Stack s;
+    s.top = -1; // Inicializa la pila como vacía
+    return s;
 }
 
 /**
@@ -19,7 +22,9 @@ Stack stack_create(){
  *          la función no realiza ninguna operación.
  */
 void stack_push(Stack* s, Data d){
-
+    if (s->top < TAM - 1) { // Verifica que haya espacio en la pila
+        s->data[++(s->top)] = d; // Incrementa top y almacena el dato
+    }
 }
 
 /**
@@ -32,7 +37,10 @@ void stack_push(Stack* s, Data d){
  *          Si la pila está vacía, no se realiza ninguna operación y se devuelve un valor de error.
  */
 Data stack_pop(Stack* s){
-
+    if (s->top >= 0) { // Verifica que la pila no esté vacía
+        return s->data[(s->top)--]; // Devuelve el dato y decrementa top
+    }
+    return -1; // Valor de error si la pila está vacía
 }
 
 /**
@@ -44,7 +52,8 @@ Data stack_pop(Stack* s){
  *          como `stack_pop` en una pila vacía.
  */
 int stack_is_empty(Stack* s){
-
+    if (s == NULL) return -1; // Verifica si el puntero es NULL
+    return (s->top == -1) ? 1 : 0; // Devuelve 1 si está vacía, 0 si no
 }
 
 /**
@@ -54,9 +63,10 @@ int stack_is_empty(Stack* s){
  * @details Esta función hace que top sea igual a -1
  */
 void stack_empty(Stack* s){
-
+    if (s != NULL) {
+        s->top = -1; // Reinicia top para indicar que la pila está vacía
+    }
 }
-
 
 /**
  * Imprime los elementos de la pila.
@@ -68,5 +78,12 @@ void stack_empty(Stack* s){
  *          la salida estándar (stdout).
  */
 void stack_print(Stack *s){
-
+    if (s == NULL || s->top == -1) {
+        printf("La pila está vacía o es inválida.\n");
+        return;
+    }
+    printf("Elementos de la pila: \n");
+    for (int i = s->top; i >= 0; i--) {
+        printf("%d\n", s->data[i]);
+    }
 }
